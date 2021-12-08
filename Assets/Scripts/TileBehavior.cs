@@ -23,16 +23,31 @@ public struct Tile : IEquatable<Tile>
 
 public class TileBehavior : MonoBehaviour
 {
+    private Vector2 center;
+    private float raiseDistance;
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    public void Mark()
+    {
+
+    }
+
+    public IEnumerator Raise()
+    {
+        // float newY = transform.position.y;
+        // while (
+        yield return null;
+
     }
 
 }

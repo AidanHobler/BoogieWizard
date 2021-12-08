@@ -13,7 +13,7 @@ public class OSCManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-        }       
+        }
         else
         {
             Destroy(this);
@@ -31,9 +31,12 @@ public class OSCManager : MonoBehaviour
         Debug.Log(msg.values);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SendTrigger(Tile position)
     {
-        
+        OscMessage msg = new OscMessage();
+        msg.address = "/" + position.col.ToString();
+        msg.values.Add("HELLO");
+        osc.Send(msg);
     }
+
 }

@@ -17,7 +17,12 @@ public class InputHandler : MonoBehaviour
 
     public void OnMove(CallbackContext ctx)
     {
-        // wizard.SetMoveDirection(ctx.ReadValue<Vector2>());
+        wizard.SetStickInput(ctx.ReadValue<Vector2>());
+    }
+
+    public void OnActivate(CallbackContext ctx)
+    {
+        OSCManager.instance.SendTrigger(new Tile(2, 2));
     }
 
 }

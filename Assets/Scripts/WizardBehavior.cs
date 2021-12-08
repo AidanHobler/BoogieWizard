@@ -20,29 +20,22 @@ public class WizardBehavior : MonoBehaviour
     private float MoveSpeed;
 
     private bool moving;
-    private Vector3 direction;
     private Rigidbody2D rb;
 
     private Direction moveDirection;
     // TODO: Remove
     private float dt;
 
-    private Gamepad gamepad;
+    private Vector2 rawInput;
 
     // Start is called before the first frame update
     void Start()
     {
         moving = false;
-        direction = Vector3.zero;
         rb = GetComponent<Rigidbody2D>();
-        
-    }
-
-    private void FixedUpdate()
-    {
-        gamepad = Gamepad.current;
 
     }
+
     // Update is called once per frame
     void Update()
     {
@@ -56,9 +49,7 @@ public class WizardBehavior : MonoBehaviour
 
     public void OnBeat()
     {
-        Vector2 move = gamepad.leftStick.ReadValue();
-
-        SetMoveDirection(move);
+        SetMoveDirection(rawInput);
 
         if (moving)
         {
@@ -68,6 +59,10 @@ public class WizardBehavior : MonoBehaviour
         }
     }
 
+    public void SetStickInput(Vector2 input)
+    {
+        rawInput = input;
+    }
     public void SetMoveDirection(Vector2 direction)
     {
         if (direction.magnitude > 0.2f)
@@ -103,10 +98,6 @@ public class WizardBehavior : MonoBehaviour
 
     }
 
-    public void StopMoving()
-    {
-        // moving = false;
-    }
 
     public void DropMark()
     {

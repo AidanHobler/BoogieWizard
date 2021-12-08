@@ -168,6 +168,17 @@
                 },
                 {
                     "name": "",
+                    "id": "5dc34762-579c-43ba-b59b-2173d0dd9d89",
+                    "path": "<XInputController>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "fabd4c29-eae5-4a2f-ae67-94f6720651b4",
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
