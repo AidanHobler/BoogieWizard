@@ -117,17 +117,17 @@ public class FloorManager : MonoBehaviour
                 litTiles[col] = activeTiles[col];
                 // tiles[col, activeTiles[col]].GetComponent<TileBehavior>().Activate();
             }
-            else
-            {
-                int row = litTiles[col];
-                row += 1;
-                if (row >= numRows) row = 0;
+            int row = litTiles[col];
+            row += 1;
+            if (row >= numRows) row = 0;
+            if (row == activeTiles[col]) row += 1;
+            if (row >= numRows) row = 0;
+            
 
-                tiles[col, litTiles[col]].GetComponent<TileBehavior>().Dim();
-                litTiles[col] = row;
+            tiles[col, litTiles[col]].GetComponent<TileBehavior>().Dim();
+            litTiles[col] = row;
 
 
-            }
 
             tiles[col, litTiles[col]].GetComponent<TileBehavior>().Brighten(colors[col]);
         }
@@ -145,6 +145,11 @@ public class FloorManager : MonoBehaviour
                 if (activeTiles[i] != -1)
                 {
                     tiles[i, activeTiles[i]].GetComponent<TileBehavior>().Deactivate();
+                }
+
+                if (litTiles[i] != -1)
+                {
+                    tiles[i, litTiles[i]].GetComponent<TileBehavior>().Deactivate();
                 }
 
                 activeTiles[i] = markedTiles[i];
