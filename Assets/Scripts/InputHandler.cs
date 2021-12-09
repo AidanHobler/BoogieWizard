@@ -41,4 +41,22 @@ public class InputHandler : MonoBehaviour
         }
     }
 
+    public void OnStart(CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            wizard.StartGame();
+        }
+
+    }
+
+    public void OnEnd(CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            wizard.EndGame();
+        }
+
+    }
+
 }

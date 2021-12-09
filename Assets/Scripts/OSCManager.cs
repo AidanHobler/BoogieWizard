@@ -66,4 +66,22 @@ public class OSCManager : MonoBehaviour
 
     }
 
+    public void SendStart()
+    {
+        OscMessage msg = new OscMessage();
+        msg.address = "/Timing";
+        msg.values.Add(1);
+        osc.Send(msg);
+
+    }
+
+    public void SendFinish()
+    {
+        OscMessage msg = new OscMessage();
+        msg.address = "/Timing";
+        msg.values.Add(0);
+        osc.Send(msg);
+
+    }
+
 }

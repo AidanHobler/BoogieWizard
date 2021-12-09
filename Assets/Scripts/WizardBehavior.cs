@@ -145,14 +145,16 @@ public class WizardBehavior : MonoBehaviour
 
     }
 
-
-    public void DropMark()
+    public void StartGame()
     {
+        OSCManager.instance.SendStart();
 
     }
 
-    public void Activate()
+    public void EndGame()
     {
+        OSCManager.instance.SendFinish();
 
     }
+
 }
