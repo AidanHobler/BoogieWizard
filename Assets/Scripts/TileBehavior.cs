@@ -26,18 +26,17 @@ public class TileBehavior : MonoBehaviour
     private Vector2 center;
     private float raiseDistance;
     private Material material;
+    private bool active;
+
+    [SerializeField]
+    private Color activeColor;
 
     // Start is called before the first frame update
     void Start()
     {
         center = transform.position;
-        material = GetComponent<SpriteRenderer>().GetComponent<Material>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        material = GetComponent<SpriteRenderer>().material;
+        Dim();
     }
 
     public void Mark()
@@ -45,9 +44,18 @@ public class TileBehavior : MonoBehaviour
         transform.position += new Vector3(0.0f, 0.3f, 0.0f);
     }
 
-    public void Unmark()
+    public void Activate()
     {
+        active = true; 
+        Vector4 hdr = new Vector4(activeColor.r, activeColor.g, activeColor.b, 1.0f) * 6;
+        material.SetVector("_GlowColor", hdr);
+    }
 
+    public void Deactivate()
+    {
+        active = false;
+        Trigger();
+        Dim();
     }
 
     public void Trigger()
@@ -57,12 +65,20 @@ public class TileBehavior : MonoBehaviour
 
     public void Brighten(Color color)
     {
-        material.color = color;
+        if (!active)
+        {
+            Vector4 hdr = new Vector4(color.r, color.g, color.b, 1.0f) * 6;
+            material.SetVector("_GlowColor", hdr);
+        }
     }
 
     public void Dim()
     {
-        material.color = new Color(0, 0, 0);
+        if (!active)
+        {
+            Vector4 hdr = new Vector4(0, 0, 0, 0);
+            material.SetVector("_GlowColor", hdr);
+        }
     }
 
 }

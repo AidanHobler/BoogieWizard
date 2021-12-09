@@ -23,6 +23,8 @@ public class WizardBehavior : MonoBehaviour
 
     private bool mark;
     private bool trigger;
+    private bool cancel;
+
     private Rigidbody2D rb;
     private Animator anim;
 
@@ -79,6 +81,12 @@ public class WizardBehavior : MonoBehaviour
             trigger = false;
         }
 
+        if (cancel)
+        {
+            FloorManager.instance.ClearColumn();
+            cancel = false;
+        }
+
         anim.SetTrigger("Lean");
     }
 
@@ -95,6 +103,11 @@ public class WizardBehavior : MonoBehaviour
     public void Mark()
     {
         mark = true;
+    }
+
+    public void Cancel()
+    {
+        cancel = true;
     }
 
     public void SetMoveDirection(Vector2 direction)

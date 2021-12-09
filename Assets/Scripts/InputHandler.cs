@@ -33,4 +33,12 @@ public class InputHandler : MonoBehaviour
         wizard.Trigger();
     }
 
+    public void OnCancel(CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            wizard.Cancel();
+        }
+    }
+
 }

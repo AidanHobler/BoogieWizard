@@ -12,10 +12,10 @@ public class FloorManager : MonoBehaviour
     private Vector2 centerPosition;
 
     [SerializeField]
-    private int numRows;
+    public int numRows;
 
     [SerializeField]
-    private int numCols;
+    public int numCols;
 
     [SerializeField]
     private Color[] colors;
@@ -25,8 +25,11 @@ public class FloorManager : MonoBehaviour
     // Which row in each column is currently lit
     private int[] litTiles;
 
-    // Which row in each column is currently activated
+    // Which row in each column is currently marked 
     private int[] markedTiles;
+
+    // Which row in each column is currently playing 
+    private int[] activeTiles;
 
     public static FloorManager instance;
 
@@ -59,12 +62,14 @@ public class FloorManager : MonoBehaviour
 
         markedTiles = new int[numCols];
         litTiles = new int[numCols];
+        activeTiles = new int[numCols];
 
         // -1 means no tile in this column is marked/lit
         for (int i = 0; i < numCols; i++)
         {
             markedTiles[i] = -1;
-            litTiles[i] = -1;
+            litTiles[i] = 0;
+            activeTiles[i] = -1;
         }
     }
 
@@ -72,7 +77,7 @@ public class FloorManager : MonoBehaviour
     {
         if (markedTiles[playerTile.col] != -1)
         {
-
+            tiles[playerTile.col, markedTiles[playerTile.col]].GetComponent<TileBehavior>().Trigger();
         }
 
         markedTiles[playerTile.col] = playerTile.row;
@@ -84,37 +89,75 @@ public class FloorManager : MonoBehaviour
     {
         if (markedTiles[playerTile.col] != -1)
         {
-            tiles[playerTile.col, markedTiles[playerTile.col]].GetComponent<TileBehavior>().Unmark();
+            tiles[playerTile.col, markedTiles[playerTile.col]].GetComponent<TileBehavior>().Trigger();
         }
+        if (litTiles[playerTile.col] != -1)
+        {
+            tiles[playerTile.col, litTiles[playerTile.col]].GetComponent<TileBehavior>().Dim();
+        }
+        if (activeTiles[playerTile.col] != -1)
+        {
+            OSCManager.instance.SendClear(playerTile.col);
+            tiles[playerTile.col, activeTiles[playerTile.col]].GetComponent<TileBehavior>().Deactivate();
+        }
+
+        markedTiles[playerTile.col] = -1;
+        litTiles[playerTile.col] = -1;
+        activeTiles[playerTile.col] = -1;
     }
 
     public void MarchColumn(int col)
     {
-        if (litTiles[col] == -1)
+        // litTiles[col] += 1;
+        // if (litTiles[col] == numRows)
+        if (activeTiles[col] != -1)
         {
-            litTiles[col] = markedTiles[col];
-        }
-        else
-        {
-            int row = litTiles[col]++;
-            if (row >= numRows) row = 0;
-            litTiles[col] = row;
+            if (litTiles[col] == -1)
+            {
+                litTiles[col] = activeTiles[col];
+                // tiles[col, activeTiles[col]].GetComponent<TileBehavior>().Activate();
+            }
+            else
+            {
+                int row = litTiles[col];
+                row += 1;
+                if (row >= numRows) row = 0;
 
-        }
+                tiles[col, litTiles[col]].GetComponent<TileBehavior>().Dim();
+                litTiles[col] = row;
 
-        tiles[col, litTiles[col]].GetComponent<TileBehavior>().Brighten(colors[col]);
+
+            }
+
+            tiles[col, litTiles[col]].GetComponent<TileBehavior>().Brighten(colors[col]);
+        }
     }
 
     public void TriggerTiles()
     {
-        foreach (Tile t in markedTiles)
+        for (int i = 0; i < numCols; i++)
         {
-            OSCManager.instance.SendTrigger(t);
-            tiles[t.col, t.row].GetComponent<TileBehavior>().Trigger();
+            if (markedTiles[i] != -1)
+            {
+                OSCManager.instance.SendTrigger(new Tile(i, markedTiles[i]));
+                tiles[i, markedTiles[i]].GetComponent<TileBehavior>().Trigger();
+
+                if (activeTiles[i] != -1)
+                {
+                    tiles[i, activeTiles[i]].GetComponent<TileBehavior>().Deactivate();
+                }
+
+                activeTiles[i] = markedTiles[i];
+                litTiles[i] = -1;
+                tiles[i, activeTiles[i]].GetComponent<TileBehavior>().Activate();
+
+            }
+
+            // Reset this tile
+            markedTiles[i] = -1;
 
         }
 
-        markedTiles.Clear();
     }
     public GameObject GetTileForMove(Direction direction)
     {
@@ -140,14 +183,22 @@ public class FloorManager : MonoBehaviour
                 break;
         }
 
-        if (result.col < 0 || result.col >= numCols)
+        // Wrap around
+        if (result.col < 0)
         {
-            result = playerTile;
+            result.col = numCols - 1;
         }
-
-        if (result.row < 0 || result.row >= numRows)
+        if (result.col >= numCols)
         {
-            result = playerTile;
+            result.col = 0;
+        }
+        if (result.row < 0)
+        {
+            result.row = numRows - 1;
+        }
+        if (result.row >= numRows)
+        {
+            result.row = 0;
         }
 
         playerTile = result;

@@ -36,6 +36,11 @@ public class OSCManager : MonoBehaviour
         {
             wizard.OnBeat();
         }
+        else
+        {
+            Debug.Log((int)msg.values[0]);
+            FloorManager.instance.MarchColumn((int) msg.values[0] - 2);
+        }
 
     }
 
@@ -47,9 +52,18 @@ public class OSCManager : MonoBehaviour
     public void SendTrigger(Tile position)
     {
         OscMessage msg = new OscMessage();
-        msg.address = "/Track/" + position.col.ToString();
-        msg.values.Add(position.row);
+        msg.address = "/Track";
+        msg.values.Add(position.col * FloorManager.instance.numCols + position.row);
         osc.Send(msg);
+    }
+
+    public void SendClear(int col)
+    {
+        OscMessage msg = new OscMessage();
+        msg.address = "/Clear";
+        msg.values.Add(col);
+        osc.Send(msg);
+
     }
 
 }
