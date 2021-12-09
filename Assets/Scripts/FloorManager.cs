@@ -17,10 +17,16 @@ public class FloorManager : MonoBehaviour
     [SerializeField]
     private int numCols;
 
+    [SerializeField]
+    private Color[] colors;
 
     private GameObject[,] tiles;
 
-    private ArrayList markedTiles;
+    // Which row in each column is currently lit
+    private int[] litTiles;
+
+    // Which row in each column is currently activated
+    private int[] markedTiles;
 
     public static FloorManager instance;
 
@@ -47,19 +53,56 @@ public class FloorManager : MonoBehaviour
             {
                 Vector2 v = centerPosition + new Vector2(2 * i, 2 * j);
                 tiles[i, j] = Instantiate(floorPiece, v, Quaternion.identity);
+                tiles[i, j].GetComponent<SpriteRenderer>().sortingOrder = -1 * j;
             }
         }
 
-        markedTiles = new ArrayList();
+        markedTiles = new int[numCols];
+        litTiles = new int[numCols];
+
+        // -1 means no tile in this column is marked/lit
+        for (int i = 0; i < numCols; i++)
+        {
+            markedTiles[i] = -1;
+            litTiles[i] = -1;
+        }
     }
 
     public void MarkTile()
     {
-        Debug.Log(playerTile.col);
-        Debug.Log(playerTile.row);
-        markedTiles.Add(playerTile);
+        if (markedTiles[playerTile.col] != -1)
+        {
+
+        }
+
+        markedTiles[playerTile.col] = playerTile.row;
         tiles[playerTile.col, playerTile.row].GetComponent<TileBehavior>().Mark();
 
+    }
+
+    public void ClearColumn()
+    {
+        if (markedTiles[playerTile.col] != -1)
+        {
+            tiles[playerTile.col, markedTiles[playerTile.col]].GetComponent<TileBehavior>().Unmark();
+        }
+    }
+
+    public void MarchColumn(int col)
+    {
+        if (litTiles[col] == -1)
+        {
+            litTiles[col] = markedTiles[col];
+        }
+        else
+        {
+            int row = litTiles[col]++;
+            if (row >= numRows) row = 0;
+            litTiles[col] = row;
+
+        }
+
+        tiles[col, litTiles[col]].GetComponent<TileBehavior>().Brighten(colors[col]);
     }
 
     public void TriggerTiles()

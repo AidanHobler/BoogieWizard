@@ -25,10 +25,13 @@ public class TileBehavior : MonoBehaviour
 {
     private Vector2 center;
     private float raiseDistance;
+    private Material material;
+
     // Start is called before the first frame update
     void Start()
     {
         center = transform.position;
+        material = GetComponent<SpriteRenderer>().GetComponent<Material>();
     }
 
     // Update is called once per frame
@@ -42,17 +45,24 @@ public class TileBehavior : MonoBehaviour
         transform.position += new Vector3(0.0f, 0.3f, 0.0f);
     }
 
+    public void Unmark()
+    {
+
+    }
+
     public void Trigger()
     {
         transform.position = center;
     }
 
-    public IEnumerator Raise()
+    public void Brighten(Color color)
     {
-        // float newY = transform.position.y;
-        // while (
-        yield return null;
+        material.color = color;
+    }
 
+    public void Dim()
+    {
+        material.color = new Color(0, 0, 0);
     }
 
 }

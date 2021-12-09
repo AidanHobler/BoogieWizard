@@ -7,6 +7,10 @@ public class OSCManager : MonoBehaviour
     public static OSCManager instance;
 
     private OSC osc;
+
+    [SerializeField]
+    private WizardBehavior wizard;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -22,7 +26,16 @@ public class OSCManager : MonoBehaviour
 
         osc = GetComponent<OSC>();
 
-        osc.SetAddressHandler("/Movement", HandleMovement);
+        osc.SetAddressHandler("/abletonout", HandleAbletonOut);
+
+    }
+
+    public void HandleAbletonOut(OscMessage msg)
+    {
+        if ((int) msg.values[0] == 1)
+        {
+            wizard.OnBeat();
+        }
 
     }
 

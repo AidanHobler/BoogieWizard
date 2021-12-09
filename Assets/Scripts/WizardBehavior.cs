@@ -24,6 +24,7 @@ public class WizardBehavior : MonoBehaviour
     private bool mark;
     private bool trigger;
     private Rigidbody2D rb;
+    private Animator anim;
 
     private Direction moveDirection;
     // TODO: Remove
@@ -38,9 +39,11 @@ public class WizardBehavior : MonoBehaviour
         mark = false;
         trigger = false;
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
 
     }
 
+    /*
     // Update is called once per frame
     void Update()
     {
@@ -51,6 +54,7 @@ public class WizardBehavior : MonoBehaviour
             dt = 0.0f;
         }
     }
+    */
 
     public void OnBeat()
     {
@@ -74,6 +78,8 @@ public class WizardBehavior : MonoBehaviour
             FloorManager.instance.TriggerTiles();
             trigger = false;
         }
+
+        anim.SetTrigger("Lean");
     }
 
     public void SetStickInput(Vector2 input)
