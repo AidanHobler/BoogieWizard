@@ -20,6 +20,9 @@ public class WizardBehavior : MonoBehaviour
     private float MoveSpeed;
 
     private bool moving;
+
+    private bool mark;
+    private bool trigger;
     private Rigidbody2D rb;
 
     private Direction moveDirection;
@@ -32,6 +35,8 @@ public class WizardBehavior : MonoBehaviour
     void Start()
     {
         moving = false;
+        mark = false;
+        trigger = false;
         rb = GetComponent<Rigidbody2D>();
 
     }
@@ -57,12 +62,35 @@ public class WizardBehavior : MonoBehaviour
             transform.localPosition = Vector2.zero;
             moving = false;
         }
+
+        if (mark)
+        {
+            FloorManager.instance.MarkTile();
+            mark = false;
+        }
+
+        if (trigger)
+        {
+            FloorManager.instance.TriggerTiles();
+            trigger = false;
+        }
     }
 
     public void SetStickInput(Vector2 input)
     {
         rawInput = input;
     }
+
+    public void Trigger()
+    {
+        trigger = true;
+    }
+
+    public void Mark()
+    {
+        mark = true;
+    }
+
     public void SetMoveDirection(Vector2 direction)
     {
         if (direction.magnitude > 0.2f)

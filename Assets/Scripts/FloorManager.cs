@@ -20,9 +20,11 @@ public class FloorManager : MonoBehaviour
 
     private GameObject[,] tiles;
 
+    private ArrayList markedTiles;
+
     public static FloorManager instance;
 
-    private Tile playerTile;
+    public Tile playerTile;
 
     // Start is called before the first frame update
     void Start()
@@ -48,8 +50,29 @@ public class FloorManager : MonoBehaviour
             }
         }
 
+        markedTiles = new ArrayList();
     }
 
+    public void MarkTile()
+    {
+        Debug.Log(playerTile.col);
+        Debug.Log(playerTile.row);
+        markedTiles.Add(playerTile);
+        tiles[playerTile.col, playerTile.row].GetComponent<TileBehavior>().Mark();
+
+    }
+
+    public void TriggerTiles()
+    {
+        foreach (Tile t in markedTiles)
+        {
+            OSCManager.instance.SendTrigger(t);
+            tiles[t.col, t.row].GetComponent<TileBehavior>().Trigger();
+
+        }
+
+        markedTiles.Clear();
+    }
     public GameObject GetTileForMove(Direction direction)
     {
         Tile result = new Tile();

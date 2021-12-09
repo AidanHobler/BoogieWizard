@@ -20,9 +20,17 @@ public class InputHandler : MonoBehaviour
         wizard.SetStickInput(ctx.ReadValue<Vector2>());
     }
 
-    public void OnActivate(CallbackContext ctx)
+    public void OnMark(CallbackContext ctx)
     {
-        OSCManager.instance.SendTrigger(new Tile(2, 2));
+        if (ctx.performed)
+        {
+            wizard.Mark();
+        }
+    }
+
+    public void OnTrigger(CallbackContext ctx)
+    {
+        wizard.Trigger();
     }
 
 }

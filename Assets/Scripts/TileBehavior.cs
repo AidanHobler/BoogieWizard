@@ -28,7 +28,7 @@ public class TileBehavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        center = transform.position;
     }
 
     // Update is called once per frame
@@ -39,7 +39,12 @@ public class TileBehavior : MonoBehaviour
 
     public void Mark()
     {
+        transform.position += new Vector3(0.0f, 0.3f, 0.0f);
+    }
 
+    public void Trigger()
+    {
+        transform.position = center;
     }
 
     public IEnumerator Raise()

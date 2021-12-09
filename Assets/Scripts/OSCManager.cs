@@ -34,8 +34,8 @@ public class OSCManager : MonoBehaviour
     public void SendTrigger(Tile position)
     {
         OscMessage msg = new OscMessage();
-        msg.address = "/" + position.col.ToString();
-        msg.values.Add("HELLO");
+        msg.address = "/Track/" + position.col.ToString();
+        msg.values.Add(position.row);
         osc.Send(msg);
     }
 
